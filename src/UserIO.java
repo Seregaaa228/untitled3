@@ -1,50 +1,75 @@
 import java.io.*;
 
 
-import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
+import static java.lang.Integer.parseInt;
+
 public class UserIO {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        Scanner scannerInput = new Scanner(System.in);
+
         System.out.println("1 - чтение ");
         System.out.println("2 - запись ");
-        Scanner scannerInput = new Scanner(System.in);
-        int input = scannerInput.nextInt();
+
+        int input = Integer.parseInt(scannerInput.nextLine());
         BufferedReader reader = null;
+        ObjectOutputStream out;
 
 
         try {
             switch (input) {
                 case 1 -> {
-                    reader = new BufferedReader(new FileReader("C:\\Users\\Serega\\Desktop\\UserIo\\Гриша.txt"));
-                    String line = reader.readLine();
-                    System.out.println(line);
+                    try {
+
+                        readFile(scannerInput.next());
+                    } catch (FileNotFoundException exception) {
+                        System.out.println("Файл не найден введите заново");
+                        readFile(scannerInput.next());
+                    }
                 }
                 case 2 -> {
+                    System.out.println("Впишите данные пользователя");
+                    System.out.println("Имя, Возраст, Город");
+                    String name = scannerInput.nextLine();
+                    String age = scannerInput.nextLine();
+                    String town = scannerInput.nextLine();
+
+
+                    User user = new User(name, parseInt(age), town);
+
                     System.out.println("Введите Имя Файла");
-                    String string = scannerInput.next();
-                    File file = new File(("C:\\Users\\Serega\\Desktop\\UserIo\\" + string + ".txt"));
-                    System.out.println("Введите Имя, Возраст, Город");
-                    String name = scannerInput.next();
-                    int age = scannerInput.nextInt();
-                    String town = scannerInput.next();
-                    Writer writer = new BufferedWriter(new OutputStreamWriter(
-                            new FileOutputStream(file, true), StandardCharsets.UTF_8));
-                             writer.append(name).append(", ").append(String.valueOf(age)).append(", ").append(town).append(".");
-                             writer.close();
+                    String source = scannerInput.nextLine();
+                    File file = new File(("C:\\Users\\Serega\\Desktop\\UserIo\\" + source + ".txt"));
+                    out = new ObjectOutputStream(new FileOutputStream(file));
+                    out.writeObject(user.toString());
+                    out.close();
+
                 }
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+
+            reader.close();
         }
     }
-}
+
+
+
+static public void readFile(String source)throws IOException{
+        BufferedReader reader=null;
+        try{
+        reader=new BufferedReader(new FileReader(source));
+        }catch(FileNotFoundException exception){
+        System.out.println("Попробуйте заново");
+        readFile(reader.readLine());
+        }
+
+        String line=reader.readLine();
+        System.out.println(line);
+
+        }
+
+        }
