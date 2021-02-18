@@ -50,21 +50,23 @@ public class UserIO {
 
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-
-            reader.close();
         }
+
+
+
     }
 
 
 
 static public void readFile(String source)throws IOException{
-        BufferedReader reader=null;
+
+        BufferedReader reader= new BufferedReader(new InputStreamReader(System.in));
         try{
         reader=new BufferedReader(new FileReader(source));
         }catch(FileNotFoundException exception){
         System.out.println("Попробуйте заново");
-        readFile(reader.readLine());
+        String newSource = reader.readLine();
+        readFile(newSource);
         }
 
         String line=reader.readLine();
